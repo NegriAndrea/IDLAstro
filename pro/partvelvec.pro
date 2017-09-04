@@ -97,7 +97,8 @@
 
 PRO partvelvec,velx,vely,posx,posy,x,y, OVER = over, VECCOLORS=vecColors, $
                FRACTION=fraction,LENGTH=length,COLOR=color,WINDOW=window, $
-	       NOCLIP=noclip, _EXTRA=extra
+	       NOCLIP=noclip, _EXTRA=extra, ref_vector=ref_vector,        $
+               lenref_vector = lenref_vector
 
 
 ;---------------------------------------------
@@ -167,6 +168,9 @@ length = length*((maxposx-minposx) > (maxposy-minposy))
 vx = length*velx/maxvel
 vy = length*vely/maxvel
 vel = length*temporary(vel)/maxvel
+
+IF (N_ELEMENTS(ref_vector) GT 0 ) THEN $
+        lenref_vector = length*ref_vector/maxvel
 
 ; Make sure no vectors extend beyond the plot data window.
 x1 = posx+vx  ; End of vector.

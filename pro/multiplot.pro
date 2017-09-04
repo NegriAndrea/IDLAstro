@@ -156,8 +156,8 @@ PRO multiplot, pmulti, help=help, $
         xtickformat=xtickformat_in, ytickformat=ytickformat_in, $
         mtitle=mtitle, mTitSize=mTitSize, mTitOffset=mTitOffset, $
         mxTitle=mxTitle, mxTitSize=mxTitSize, mxTitOffset=mxTitOffset, $
-        myTitle=myTitle, myTitSize=myTitSize, myTitOffset=myTitOffset
-
+        myTitle=myTitle, myTitSize=myTitSize, myTitOffset=myTitOffset, $
+        aspect=aspect_in
 
 
 
@@ -178,7 +178,8 @@ PRO multiplot, pmulti, help=help, $
         ,ytickformat $
         ,gap  $
         ,xgap $
-        ,ygap
+        ,ygap $
+        ,aspect
 
     ; help message
     if keyword_set(help) then begin
@@ -211,6 +212,7 @@ PRO multiplot, pmulti, help=help, $
         gap=0.0
         xgap=0.0
         ygap=0.0
+        aspect=[]
         if keyword_set(verbose) then begin
             message,/inform,$
                 'Restore IDL''s defaults for affected system variables.'
@@ -241,6 +243,7 @@ PRO multiplot, pmulti, help=help, $
         gap=0.0
         xgap=0.0
         ygap=0.0
+        aspect=[]
         return
     endif
 
@@ -265,6 +268,9 @@ PRO multiplot, pmulti, help=help, $
         xgap=gap
         ygap=gap
     endif
+
+    ; if not double some imprecision in the box will arise
+    if isdef(aspect_in) then aspect=double(aspect_in)
 
 
     ;
@@ -403,6 +409,11 @@ PRO multiplot, pmulti, help=help, $
     ;; force to be square if requested
     if sqplot then begin 
         if idx[0] lt idx[1] then idx[1]=idx[0] else idx[0]=idx[1]
+    endif 
+
+    if isdef(aspect) then begin
+        if idx[0] lt idx[1] then idx[1]=idx[0]*aspect else idx[0]=idx[1]/aspect
+        ;idx[1]=idx[0]*aspect
     endif 
 
     if colmajor then begin        ; location in matrix of plots
